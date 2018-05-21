@@ -1,0 +1,52 @@
+div
+    mat-card
+        mat-card-title(fxLayout="row", fxLayoutAlign="start center")
+            div
+                button(mat-raised-button, routerLink="/admin") Назад
+            div(fxFlexOffset="15px") Отделения
+        mat-card-content
+            br
+            mat-table(#table, [dataSource]="places")
+                ng-container(matColumnDef="objectId")
+                    mat-header-cell(*matHeaderCellDef) ID
+                    mat-cell(*matCellDef="let item") {{item.objectId}}
+                ng-container(matColumnDef="name")
+                    mat-header-cell(*matHeaderCellDef) Название
+                    mat-cell(*matCellDef="let item") {{item.name}}
+                ng-container(matColumnDef="address")
+                    mat-header-cell(*matHeaderCellDef) Адрес
+                    mat-cell(*matCellDef="let item") {{item.address}}
+                ng-container(matColumnDef="phone")
+                    mat-header-cell(*matHeaderCellDef) Телефон
+                    mat-cell(*matCellDef="let item") {{item.phone}}
+                ng-container(matColumnDef="signature")
+                    mat-header-cell(*matHeaderCellDef) Подпись
+                    mat-cell(*matCellDef="let item") {{item.signature}}
+                ng-container(matColumnDef="action")
+                    mat-header-cell(*matHeaderCellDef) Управление
+                    mat-cell(*matCellDef="let item")
+                        //button(mat-icon-button)
+                            mat-icon edit
+                        button(mat-icon-button, (click)="delete(item.objectId)")
+                            mat-icon delete
+                mat-header-row(*matHeaderRowDef="displayedColumns")
+                mat-row(*matRowDef="let places; columns: displayedColumns;")
+            br
+            h4 Добавить отделение
+            div([formGroup]="placeForm")
+                div(fxLayout="row")
+                    mat-form-field
+                        input(matInput, placeholder="Название", required, formControlName="name")
+                        mat-error Обязательное поле
+                    mat-form-field(fxFlexOffset="15px")
+                        input(matInput, placeholder="Адрес", required, formControlName="address")
+                        mat-error Обязательное поле
+                    mat-form-field(fxFlexOffset="15px")
+                        input(matInput, placeholder="Телефон", required, formControlName="phone")
+                        mat-error Обязательное поле
+                    mat-form-field(fxFlexOffset="15px")
+                        input(matInput, placeholder="Подпись", required, formControlName="signature")
+                        mat-error Обязательное поле
+                    //div(fxFlexOffset="15px")
+                        input(type="file", (change)="fileChange($event)")
+                button(mat-raised-button, (click)="submit()", [disabled]="!placeForm.valid") Добавить

@@ -1,0 +1,61 @@
+div
+    mat-card
+        mat-card-title(fxLayout="row", fxLayoutAlign="start center")
+            div
+                button(mat-raised-button, routerLink="/admin") Назад
+            div(fxFlexOffset="15px") Вопросы
+        mat-card-content
+            mat-table(#table, [dataSource]="questionList")
+                ng-container(matColumnDef="objectId")
+                    mat-header-cell(*matHeaderCellDef) ID
+                    mat-cell(*matCellDef="let item") {{item.objectId}}
+                ng-container(matColumnDef="header")
+                    mat-header-cell(*matHeaderCellDef) Заголовок
+                    mat-cell(*matCellDef="let item") {{item.header}}
+                ng-container(matColumnDef="type")
+                    mat-header-cell(*matHeaderCellDef) Тип вопроса
+                    mat-cell(*matCellDef="let item") {{item.type === 0 ? 'Открытый' : 'Варианты ответа'}}
+                ng-container(matColumnDef="body")
+                    mat-header-cell(*matHeaderCellDef) Тело вопроса
+                    mat-cell(*matCellDef="let item") {{item.body}}
+                ng-container(matColumnDef="answers")
+                    mat-header-cell(*matHeaderCellDef) Варианты ответа
+                    mat-cell(*matCellDef="let item")
+                        span(*ngFor="let answer of item.answers") {{answer.name}},&nbsp;
+                ng-container(matColumnDef="action")
+                    mat-header-cell(*matHeaderCellDef) Управление
+                    mat-cell(*matCellDef="let item")
+                        //button(mat-icon-button)
+                            mat-icon edit
+                        button(mat-icon-button, (click)="delete(item.objectId)")
+                            mat-icon delete
+                mat-header-row(*matHeaderRowDef="displayedColumns")
+                mat-row(*matRowDef="let ads; columns: displayedColumns;")
+
+            h4 Добавить вопрос
+            div([formGroup]="pollForm")
+                div(fxLayout="row", fxLayoutAlign="start start")
+                    mat-form-field
+                        input(matInput, placeholder="Заголовок вопроса", required, formControlName="header")
+                        mat-error Обязательное поле
+                    mat-form-field(fxFlexOffset="15px")
+                        mat-select(placeholder="Тип вопроса", required, formControlName="type")
+                            mat-option([value]="0") Открытый
+                            mat-option([value]="1") С вариантами ответа
+                        mat-error Обязательная опция
+                    mat-form-field(fxFlexOffset="15px")
+                        input(matInput, placeholder="Тело вопроса", required, formControlName="body")
+                        mat-error Обязательное поле
+                    div(*ngIf="pollForm.controls.type.value === 1", fxLayout="row", fxFlexOffset="15px", formArrayName="answers")
+                        div
+                            button(mat-button, (click)="pollForm.controls.answers.push(initQuestion())")
+                                mat-icon playlist_add
+                        div(fxLayout="column", fxFlexOffset="15px")
+                            div(*ngFor="let answer of pollForm.controls.answers.controls; let i = index", [formGroupName]="i")
+                                mat-form-field(fxFlexOffset="5px")
+                                    input(matInput, placeholder="Ответ", formControlName="name", required)
+                                button(mat-icon-button, (click)="pollForm.controls.answers.removeAt(i)")
+                                    mat-icon delete_forever
+                    //mat-form-field(fxFlexOffset="15px")
+                        input(matInput, placeholder="Вариант ответа", formControlName="answers")
+                button(mat-raised-button, (click)="submit()") Добавить вопрос

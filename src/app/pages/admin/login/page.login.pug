@@ -1,0 +1,12 @@
+div
+    mat-card([formGroup]="loginForm")
+        mat-card-content
+            div(fxLayout="column", fxLayoutAlign="center center")
+                mat-form-field
+                    input(matInput, placeholder="Login", required, formControlName="username")
+                    mat-error Обязательное поле
+                mat-form-field
+                    input(matInput, placeholder="Password", required, formControlName="password")
+                    mat-error Обязательное поле
+                br
+                button(mat-raised-button, (click)="loginSubmit()") Войти

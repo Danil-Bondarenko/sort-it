@@ -1,0 +1,7 @@
+div(fxLayout="column")
+    h3(style="text-align: center") Выберите отделение:
+    mat-form-field
+        mat-select([(ngModel)]="selectedPlace")
+            mat-option(*ngFor="let place of places", [value]="place") {{place.get('name')}} ({{place.get('address')}})
+    button(mat-raised-button, (click)="choose()") Выбрать
+

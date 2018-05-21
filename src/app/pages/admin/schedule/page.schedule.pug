@@ -1,0 +1,35 @@
+div
+    mat-card
+        mat-card-title(fxLayout="row", fxLayoutAlign="start center")
+            div
+                button(mat-raised-button, routerLink="/admin") Назад
+            div(fxFlexOffset="15px", fxFlex) Расписание
+            div
+                mat-form-field
+                    mat-select(placeholder="Отделения", required, (change)="selectPlace($event)")
+                        mat-option(*ngFor="let place of places", [value]="place.objectId") {{place.name}}
+        mat-card-content
+            br
+            .calendar(*ngIf="staffList.length")
+                ul.weekdays
+                    li
+                        abbr Понедельник
+                    li
+                        abbr Вторник
+                    li
+                        abbr Среда
+                    li
+                        abbr Четверг
+                    li
+                        abbr Пятница
+                    li
+                        abbr Суббота
+                    li
+                        abbr Воскресение
+                ul.day-grid
+                    li(*ngFor="let day of monthArray")
+                        div {{day.date | date: 'dd.MM'}}
+                        div(*ngIf="day.date")
+                            mat-form-field
+                                mat-select((change)="updateSchedule($event, day)", [value]="selectedStaff(day)")
+                                    mat-option(*ngFor="let user of staffList", [value]="user.objectId") {{user.name}} {{user.lastName}}

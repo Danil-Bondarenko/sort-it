@@ -1,0 +1,10 @@
+mat-toolbar
+    span(fxFlex) Ломбард "Позика"
+    button(mat-button, [matMenuTriggerFor]="accountMenu")
+        mat-icon account_box
+        span &nbsp;{{user.get('username')}}
+    mat-menu(#accountMenu="matMenu")
+        button(mat-menu-item, (click)="logout()")
+            span Выйти
+            //span {{'header.logout' | translate}}
+router-outlet

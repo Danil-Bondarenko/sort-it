@@ -1,0 +1,38 @@
+div
+    mat-card
+        mat-card-title(fxLayout="row", fxLayoutAlign="start center")
+            div
+                button(mat-raised-button, routerLink="/admin") Назад
+            div(fxFlexOffset="15px") Менеджер Рекламы
+        mat-card-content
+            br
+            mat-table(#table, [dataSource]="ads")
+                ng-container(matColumnDef="objectId")
+                    mat-header-cell(*matHeaderCellDef) ID
+                    mat-cell(*matCellDef="let item") {{item.objectId}}
+                ng-container(matColumnDef="title")
+                    mat-header-cell(*matHeaderCellDef) Заголовок
+                    mat-cell(*matCellDef="let item") {{item.title}}
+                ng-container(matColumnDef="image")
+                    mat-header-cell(*matHeaderCellDef) Баннер
+                    mat-cell(*matCellDef="let item")
+                        img([src]="item.image.url", style="height: 100px;padding: 20px;")
+                ng-container(matColumnDef="action")
+                    mat-header-cell(*matHeaderCellDef) Управление
+                    mat-cell(*matCellDef="let item")
+                        //button(mat-icon-button)
+                            mat-icon edit
+                        button(mat-icon-button, (click)="delete(item.objectId)")
+                            mat-icon delete
+                mat-header-row(*matHeaderRowDef="displayedColumns")
+                mat-row(*matRowDef="let ads; columns: displayedColumns;")
+            br
+            h4 Добавить баннер
+            div([formGroup]="adForm")
+                div(fxLayout="row", fxLayoutAlign="start center")
+                    mat-form-field
+                        input(matInput, placeholder="Заголовок", required, formControlName="title")
+                        mat-error Обязательное поле
+                    div(fxFlexOffset="15px")
+                        input(type="file", (change)="fileChange($event)")
+                button(mat-raised-button, (click)="submit()", [disabled]="!adForm.valid || !newAdFile") Добавить

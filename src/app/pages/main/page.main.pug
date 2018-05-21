@@ -1,0 +1,26 @@
+.header
+    img.logo(src="assets/img/lombard-logo.png")
+
+.block(*ngIf="!quiz", (click)="openQuiz()")
+    slideshow([height]="'100%'", [autoPlay]="true", [showArrows]="false", [imageUrls]="imageSources", [autoPlayInterval]="5000")
+.block(*ngIf="quiz && questionList.length", fxLayout="column", fxLayoutAlign="center center")
+    //div {{questionList[quizStep] | json}}
+    //br
+    div(fxLayout="column", fxLayoutAlign="center center")
+        h1(style="margin:0; font-size: 36px") {{questionList[quizStep].header}}
+        h1(style="margin-top:0; font-size: 48px") {{questionList[quizStep].body}}
+        div(*ngIf="questionList[quizStep].type === 0", fxLayout="column", fxLayoutAlign="center center")
+            input([(ngModel)]="answerFreeFrom")
+            div
+            .answer-button(fxLayoutAlign="center center", (click)="setAnswer(answerFreeFrom)")
+                div Далее
+        div(*ngIf="questionList[quizStep].type === 1", fxLayout="row")
+            .answer-button(*ngFor="let answer of questionList[quizStep].answers; let i = index;", fxLayoutAlign="center center", fxFlexOffset="10px", (click)="setAnswer(i)")
+                div
+                    h1 {{answer.name}}
+
+.footer
+    img(src="assets/img/footer.png")
+    .centered {{signature}}
+
+

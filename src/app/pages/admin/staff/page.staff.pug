@@ -1,0 +1,55 @@
+div
+    mat-card
+        mat-card-title(fxLayout="row", fxLayoutAlign="start center")
+            div
+                button(mat-raised-button, routerLink="/admin") Назад
+            div(fxFlexOffset="15px") Персонал
+        mat-card-content
+            br
+            mat-table(#table, [dataSource]="staffList")
+                ng-container(matColumnDef="objectId")
+                    mat-header-cell(*matHeaderCellDef) ID
+                    mat-cell(*matCellDef="let item") {{item.objectId}}
+                ng-container(matColumnDef="name")
+                    mat-header-cell(*matHeaderCellDef) Имя
+                    mat-cell(*matCellDef="let item") {{item.name}}
+                ng-container(matColumnDef="lastName")
+                    mat-header-cell(*matHeaderCellDef) Фамилия
+                    mat-cell(*matCellDef="let item") {{item.lastName}}
+                ng-container(matColumnDef="phone")
+                    mat-header-cell(*matHeaderCellDef) Телефон
+                    mat-cell(*matCellDef="let item") {{item.phone}}
+                ng-container(matColumnDef="place")
+                    mat-header-cell(*matHeaderCellDef) Отделения
+                    mat-cell(*matCellDef="let item")
+                        div(*ngIf="item.place.length")
+                            div(*ngFor="let place of item.place", fxLayout="column")
+                                div {{place.name}}
+                ng-container(matColumnDef="action")
+                    mat-header-cell(*matHeaderCellDef) Управление
+                    mat-cell(*matCellDef="let item")
+                        //button(mat-icon-button)
+                            mat-icon edit
+                        button(mat-icon-button, (click)="delete(item.objectId)")
+                            mat-icon delete
+                mat-header-row(*matHeaderRowDef="displayedColumns")
+                mat-row(*matRowDef="let var; columns: displayedColumns;")
+            br
+            h4 Добавить сотрудника
+            div([formGroup]="staffForm")
+                div(fxLayout="row")
+                    mat-form-field
+                        input(matInput, placeholder="Имя", required, formControlName="name")
+                        mat-error Обязательное поле
+                    mat-form-field(fxFlexOffset="15px")
+                        input(matInput, placeholder="Фамилия", required, formControlName="lastName")
+                        mat-error Обязательное поле
+                    mat-form-field(fxFlexOffset="15px")
+                        input(matInput, placeholder="Телефон", required, formControlName="phone")
+                        mat-error Обязательное поле
+                    mat-form-field(fxFlexOffset="15px")
+                        mat-select(placeholder="Отделения", required, formControlName="place", multiple)
+                            mat-option(*ngFor="let place of places", [value]="place.objectId") {{place.name}}
+                    //div(fxFlexOffset="15px")
+                        input(type="file", (change)="fileChange($event)")
+                button(mat-raised-button, (click)="submit()", [disabled]="!staffForm.valid") Добавить

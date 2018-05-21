@@ -1,0 +1,54 @@
+div
+    mat-card
+        mat-card-content
+            div(fxLayout="row", fxLayoutAlign="start start")
+                mat-list(role="list")
+                    mat-list-item(role="listitem", routerLink="/admin/ads") Менеджер Рекламы
+                    mat-list-item(role="listitem", routerLink="/admin/staff") Персонал
+                    mat-list-item(role="listitem", routerLink="/admin/places") Отделения
+                    mat-list-item(role="listitem", routerLink="/admin/schedule") Расписание
+                    mat-list-item(role="listitem", routerLink="/admin/polls") Вопросы
+                div(fxFlex, fxFlexOffset="30px")
+                    div(fxLayout="column")
+                        div
+                            h1 Статистика
+                        div(fxLayout="row", [formGroup]="statisticForm")
+                            mat-form-field
+                                input(matInput, [matDatepicker]="dateFrom", placeholder="Дата с", formControlName="dateFrom", disabled, required)
+                                mat-datepicker-toggle(matSuffix [for]="dateFrom")
+                                mat-datepicker(#dateFrom, disabled="false")
+                                mat-error Ошибка даты
+                            mat-form-field(fxFlexOffset="15px")
+                                input(matInput, [matDatepicker]="dateTo", placeholder="Дата по", formControlName="dateTo", [min]="statisticForm.controls.dateFrom.value", disabled, required)
+                                mat-datepicker-toggle(matSuffix [for]="dateTo")
+                                mat-datepicker(#dateTo, disabled="false")
+                                mat-error Ошибка даты
+                            mat-form-field(fxFlexOffset="15px")
+                                mat-select(placeholder="Отделение", formControlName="place")
+                                    mat-option(value="") Все
+                                    mat-option(*ngFor="let place of places", [value]="place.objectId") {{place.name}} ({{place.address}})
+                            mat-form-field(fxFlexOffset="15px")
+                                mat-select(placeholder="Сотрудник", formControlName="staff")
+                                    mat-option(value="") Все
+                                    mat-option(*ngFor="let staff of staffList", [value]="staff.objectId") {{staff.name}} {{staff.lastName}}
+                            div(fxFlexOffset="15px", fxLayoutAlign="center center")
+                                button(mat-raised-button, [disabled]="statisticForm.invalid", (click)="getStatistic()") Показать
+                        div(fxLayout="column")
+                            h2 Ответы ({{total}})
+                            //div {{statistic | json}}
+                            //div {{results | json}}
+                            div(*ngFor="let answer of results")
+                                div(fxLayout="row")
+                                    div
+                                        div {{statistic[answer].header}}
+                                        b {{statistic[answer].body}}
+                                    div(fxFlexOffset="15px", fxFlex, fxLayoutAlign="start end", fxLayout="column")
+                                        //div {{statistic[answer] | json}}
+                                        div(fxLayout="row")
+                                            b Вариант
+                                            b(fxFlexOffset="15px", fxFlex="100px") %
+                                        div(fxLayout="row", *ngFor="let result of statistic[answer].answers; let i = index;")
+                                            div {{result.name || result || 'Пустой ответ'}}
+                                            div(fxFlexOffset="15px", fxFlex="100px", *ngIf="statistic[answer].result[i]") {{((statistic[answer].result[i]/statistic[answer].total)*100).toFixed(2)}}%
+                                            div(fxFlexOffset="15px", fxFlex="100px", *ngIf="!statistic[answer].result[i]") 0%
+                                hr
